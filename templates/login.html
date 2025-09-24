@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <div class="card" style="max-width: 450px; width: 100%; text-align: center;">
+        <div style="margin-bottom: 2rem;">
+            <h1 style="color: white; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-weight: 700;">Welcome Back!</h1>
+            <p style="color: white; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); opacity: 0.95;">Sign in to continue your journey with DonateSecure</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('process_login') }}">
+            <div class="form-group" style="text-align: left;">
+                <label for="email" style="font-size: 1rem; margin-bottom: 0.8rem;">📧 Email Address</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="your.email@example.com" 
+                       style="font-size: 1rem; padding: 15px;">
+            </div>
+            
+            <div class="form-group" style="text-align: left;">
+                <label for="password" style="font-size: 1rem; margin-bottom: 0.8rem;">🔐 Password</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Enter your password"
+                       style="font-size: 1rem; padding: 15px;">
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 1rem;">
+                🚀 Login
+            </button>
+        </form>
+        
+       <!-- Demo Accounts -->
+<div style="background: white; border-radius: 15px; padding: 2rem; margin: 2rem 0; border-left: 4px solid #667eea;">
+    <h4 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.1rem;">🧪 Try Demo Accounts</h4>
+    <div style="display: grid; gap: 1rem; text-align: left;">
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 2px solid #667eea;">
+            <strong style="color: #667eea;">Donor Account:</strong><br>
+            <span style="font-family: monospace; color: #333; font-size: 0.9rem; font-weight: 600;">donor@example.com / password123</span>
+        </div>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 2px solid #f5576c;">
+            <strong style="color: #f5576c;">NGO Account:</strong><br>
+            <span style="font-family: monospace; color: #333; font-size: 0.9rem; font-weight: 600;">ngo@example.com / password123</span>
+        </div>
+    </div>
+</div>
+        
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+            <p style="color: white; margin-bottom: 1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-weight: 500;">Don't have an account?</p>
+            <a href="{{ url_for('choose_role') }}" class="btn btn-secondary" style="padding: 12px 24px;">
+                ✨ Create New Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

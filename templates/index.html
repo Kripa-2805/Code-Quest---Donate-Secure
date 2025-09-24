@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="
+    background: linear-gradient(135deg, #232c51 0%, #39355c 100%);
+    border: 2px solid rgba(255,255,255,0.15); 
+    box-shadow: 0 15px 40px rgba(44,82,160,0.55);
+    border-radius: 24px;
+    margin: 2rem auto 2.5rem auto;
+    max-width: 670px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 2.3rem 1.2rem 2rem 1.2rem;
+    position: relative;
+    ">
+  <h1 style="
+      color: #fff;
+      font-size: 2.7rem;
+      font-weight: 900;
+      text-shadow: 0 3px 12px #5172d1, 0 2px 4px #1a1a3a, 0 1px 1px #222;
+      margin-bottom: 1.05rem;
+      letter-spacing: 1.6px;
+      line-height: 1.13;
+    ">
+    <span style="font-size: 2.0rem; vertical-align: middle;">🌟</span> DonateSecure
+  </h1>
+  <p style="
+      color: #fff;
+      font-size: 1.17rem;
+      text-shadow: 0 2px 10px #1a1a3a;
+      font-weight: 500;
+      margin-bottom: 1.7rem;
+      letter-spacing: 1.1px;
+      line-height: 1.3;
+      font-family: inherit;
+    ">
+    Every Rupee Traceable • Every Donation Transparent • Every Impact Visible
+  </p>
+  <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 0.2rem;">
+      <a href="{{ url_for('choose_role') }}" class="btn" style="font-size: 1.08rem; padding: 1em 2.3em; border-radius: 42px; box-shadow: 0 2px 16px #3d3ee4;">🚀 Start Donating</a>
+      <a href="{{ url_for('about') }}" class="btn btn-outline" style="font-size: 1.08rem; padding: 1em 2.3em; border-radius: 42px; border: 2px solid #fff; color: #fff; box-shadow: 0 2px 14px #732ed7;">📖 Learn More</a>
+  </div>
+</section>
+
+
+
+
+
+<!-- Features Section -->
+<section style="margin: 4rem auto; max-width: 900px; padding: 2rem 1.5rem;">
+  <h2 style="text-align: center; font-size: 2.5rem; font-weight: 900; color: #2c2c2c; margin-bottom: 2.7rem;">
+    ⭐ Why Choose DonateSecure?
+  </h2>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>100% Secure</h3>
+      <p>Advanced encryption and blockchain technology ensure your donations are completely secure and traceable.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👁️</div>
+      <h3>Transparent</h3>
+      <p>Track every rupee and see exactly how your donation is used with real-time updates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✅</div>
+      <h3>Verified NGOs</h3>
+      <p>All NGOs verified through NITI Aayog ID and tax exemption certificates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant Impact</h3>
+      <p>See instant reports and success stories from the communities you help.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <h3>Multiple Payment Options</h3>
+      <p>Support for UPI, Net Banking, Credit/Debit Cards, and more.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>User Friendly</h3>
+      <p>Easy-to-use interface for donors and NGOs of all backgrounds.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Stories & Urgent Requirements -->
+<section style="margin: 4rem 0;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+        <!-- Success Stories -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: #2c3e50; font-size: 1.8rem;">🎉 Success Stories</h2>
+                <a href="{{ url_for('stories') }}" class="btn" style="padding: 8px 16px; font-size: 0.9rem;">View All</a>
+            </div>
+            {% for story in stories %}
+                <div style="border-left: 4px solid #667eea; padding: 1rem; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 0 8px 8px 0; transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">{{ story[0] }}</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">{{ story[1][:150] }}...</div>
+                    <div style="font-size: 0.8rem; color: #888; display: flex; justify-content: space-between;">
+                        <span>🏢 {{ story[2] }}</span>
+                        <span>📅 {{ story[3][:10] }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align: center; color: #666; padding: 2rem;">No stories yet. Be the first to make a difference! 🌟</p>
+            {% endfor %}
+        </div>
+
+        <!-- Urgent Requirements -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="color: #2c3e50; font-size: 1.8rem;">🚨 Urgent Requirements</h2>
+                <a href="{{ url_for('urgent_requirements') }}" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">View All</a>
+            </div>
+            {% for req in urgent_requirements %}
+                <div style="border-left: 4px solid #e74c3c; padding: 1rem; margin-bottom: 1.5rem; background: #f8f9fa; border-radius: 0 8px 8px 0; transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
+                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 0.5rem;">{{ req[0] }}</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">{{ req[1][:120] }}...</div>
+                    <div style="margin-top: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+                            <span style="font-weight: 600;">₹{{ "{:,.0f}".format(req[3]) }} raised</span>
+                            <span style="color: #666;">₹{{ "{:,.0f}".format(req[2]) }} needed</span>
+                        </div>
+                        <div style="background: #e9ecef; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 0.3rem;">
+                            <div style="background: linear-gradient(45deg, #667eea, #764ba2); height: 100%; transition: width 0.3s ease; width: {{ (req[3]/req[2]*100) if req[2] > 0 else 0 }}%;"></div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #888; display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                        <span>🏢 {{ req[4] }}</span>
+                        <span style="color: #e74c3c;">⏰ Urgent</span>
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align: center; color: #666; padding: 2rem;">No urgent requirements at the moment. 🙏</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<style>
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: white !important;
+  color: #333 !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  border-radius: 12px !important;
+  padding: 1.3rem 1.5rem !important;
+  max-width: 440px;
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 8px 36px rgba(0,0,0,0.18);
+}
+
+.feature-card h3 {
+  color: #4a4a4a !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+}
+
+.feature-card p {
+  font-weight: 400 !important;
+  font-size: 0.925rem !important;
+  color: #666 !important;
+}
+</style>
+
+
+<!-- Call to Action -->
+<section class="card" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; text-align: center; margin: 4rem 0;">
+    <h2 style="margin-bottom: 1rem;">Ready to Make a Difference?</h2>
+    <p style="margin-bottom: 2rem; font-size: 1.1rem;">Join thousands of donors who are creating real impact through transparent giving.</p>
+    <a href="{{ url_for('choose_role') }}" class="btn" style="background: white; color: #f5576c; padding: 15px 30px; font-size: 1.1rem; font-weight: 600;">💝 Start Donating Now</a>
+</section>
+{% endblock %}

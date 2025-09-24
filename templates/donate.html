@@ -1,0 +1,282 @@
+<!-- templates/donate.html -->
+{% extends "base.html" %}
+
+{% block title %}Donate to {{ ngo[2] }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('ngo_details', ngo_id=ngo[0]) }}" style="color: #667eea; text-decoration: none; font-weight: 500;">← Back to NGO Details</a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+    <!-- Donation Form -->
+    <div class="card">
+        <h1 style="color: #2c3e50; margin-bottom: 1rem; text-align: center;">💝 Make a Donation</h1>
+        <p style="color: #666; text-align: center; margin-bottom: 2rem;">Your contribution will make a real difference</p>
+        
+        <form method="POST" action="{{ url_for('process_donation') }}" id="donationForm">
+            <input type="hidden" name="ngo_id" value="{{ ngo[0] }}">
+            
+            <!-- Amount Selection -->
+            <div class="form-group">
+                <label for="amount" style="font-size: 1.1rem;">💰 Donation Amount (₹)</label>
+                
+                <!-- Quick Amount Buttons -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                    <button type="button" class="amount-btn" data-amount="500" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">₹500</button>
+                    <button type="button" class="amount-btn" data-amount="1000" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">₹1,000</button>
+                    <button type="button" class="amount-btn" data-amount="2000" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">₹2,000</button>
+                    <button type="button" class="amount-btn" data-amount="5000" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">₹5,000</button>
+                    <button type="button" class="amount-btn" data-amount="10000" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">₹10,000</button>
+                    <button type="button" id="customBtn" style="padding: 12px; border: 2px solid #667eea; border-radius: 8px; background: #667eea; color: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500;">Custom</button>
+                </div>
+                
+                <!-- Custom Amount Input -->
+                <input type="number" id="amount" name="amount" min="10" max="100000" required 
+                       placeholder="Enter custom amount" style="font-size: 1.1rem; text-align: center; font-weight: 600;">
+            </div>
+            
+            <!-- Payment Method -->
+            <div class="form-group">
+                <label style="font-size: 1.1rem;">💳 Payment Method</label>
+                <div style="display: grid; gap: 1rem;">
+                    <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                        <input type="radio" name="payment_method" value="upi" required style="margin-right: 15px; transform: scale(1.2);">
+                        <div>
+                            <strong style="color: #2c3e50;">📱 UPI Payment</strong>
+                            <p style="color: #666; margin: 0; font-size: 0.9rem;">Google Pay, PhonePe, Paytm, etc.</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                        <input type="radio" name="payment_method" value="card" required style="margin-right: 15px; transform: scale(1.2);">
+                        <div>
+                            <strong style="color: #2c3e50;">💳 Credit/Debit Card</strong>
+                            <p style="color: #666; margin: 0; font-size: 0.9rem;">Visa, Mastercard, RuPay</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; padding: 15px; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;" class="payment-option">
+                        <input type="radio" name="payment_method" value="netbanking" required style="margin-right: 15px; transform: scale(1.2);">
+                        <div>
+                            <strong style="color: #2c3e50;">🏦 Net Banking</strong>
+                            <p style="color: #666; margin: 0; font-size: 0.9rem;">All major banks supported</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Security Notice -->
+            <div style="background: #e8f4f8; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 4px solid #4CAF50;">
+                <h4 style="color: #2c3e50; margin-bottom: 1rem;">🔒 Your Security is Our Priority</h4>
+                <ul style="color: #666; line-height: 1.6; margin: 0; padding-left: 1.2rem;">
+                    <li>All payments are processed through secure, encrypted channels</li>
+                    <li>We never store your payment information</li>
+                    <li>Your donation is directly transferred to the NGO</li>
+                    <li>You'll receive a confirmation email with transaction details</li>
+                </ul>
+            </div>
+            
+            <!-- Terms and Conditions -->
+            <div style="margin-bottom: 2rem;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" required style="margin-right: 10px; transform: scale(1.2);">
+                    <span style="color: #666; font-size: 0.9rem;">
+                        I agree to the <a href="#" style="color: #667eea;">Terms & Conditions</a> and confirm that this donation is made voluntarily
+                    </span>
+                </label>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.2rem; font-weight: 600;" id="donateBtn">
+                🎉 Complete Donation
+            </button>
+        </form>
+    </div>
+    
+    <!-- NGO Summary & Impact -->
+    <div style="display: grid; gap: 2rem;">
+        <!-- NGO Summary -->
+        <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+            <h3 style="margin-bottom: 1rem;">Donating to:</h3>
+            <h2 style="margin-bottom: 1rem;">{{ ngo[2] }}</h2>
+            <div style="margin-bottom: 1rem;">
+                <p style="margin-bottom: 0.5rem;">📍 {{ ngo[3] }}</p>
+                <p style="margin-bottom: 0.5rem;">📞 {{ ngo[4] }}</p>
+                <p style="margin-bottom: 0.5rem;">📧 {{ ngo[5] }}</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 10px;">
+                <p style="text-align: center; margin: 0;">✅ Verified & Trusted NGO</p>
+            </div>
+        </div>
+        
+        <!-- Impact Calculator -->
+        <div class="card">
+            <h3 style="color: #2c3e50; margin-bottom: 1.5rem; text-align: center;">💫 Your Impact</h3>
+            <div id="impactDisplay" style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #4CAF50;">
+                <p style="color: #666; font-size: 1.1rem;">Select an amount to see your potential impact</p>
+            </div>
+        </div>
+        
+        <!-- Why Donate -->
+        <div class="card">
+            <h3 style="color: #2c3e50; margin-bottom: 1.5rem;">Why Your Donation Matters</h3>
+            <div style="display: grid; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">🎯</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Direct Impact</strong>
+                        <p style="color: #666; margin: 0; font-size: 0.9rem;">100% of your donation goes directly to the cause</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">📊</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Full Transparency</strong>
+                        <p style="color: #666; margin: 0; font-size: 0.9rem;">Track how your money is being used</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2rem;">🏆</div>
+                    <div>
+                        <strong style="color: #2c3e50;">Verified NGO</strong>
+                        <p style="color: #666; margin: 0; font-size: 0.9rem;">NITI Aayog verified organization</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Amount button functionality
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const amount = this.dataset.amount;
+            const amountInput = document.getElementById('amount');
+            
+            // Clear previous selections
+            document.querySelectorAll('.amount-btn').forEach(b => {
+                b.style.background = 'white';
+                b.style.color = '#333';
+                b.style.borderColor = '#ddd';
+            });
+            
+            if (amount) {
+                // Set amount and highlight button
+                amountInput.value = amount;
+                this.style.background = '#667eea';
+                this.style.color = 'white';
+                this.style.borderColor = '#667eea';
+                updateImpact(amount);
+            } else {
+                // Custom amount
+                amountInput.focus();
+                this.style.background = '#667eea';
+                this.style.color = 'white';
+                this.style.borderColor = '#667eea';
+            }
+        });
+    });
+    
+    // Custom amount input
+    document.getElementById('amount').addEventListener('input', function() {
+        const amount = this.value;
+        if (amount) {
+            // Clear button selections
+            document.querySelectorAll('.amount-btn').forEach(b => {
+                b.style.background = 'white';
+                b.style.color = '#333';
+                b.style.borderColor = '#ddd';
+            });
+            // Highlight custom button
+            document.getElementById('customBtn').style.background = '#667eea';
+            document.getElementById('customBtn').style.color = 'white';
+            document.getElementById('customBtn').style.borderColor = '#667eea';
+            updateImpact(amount);
+        }
+    });
+    
+    // Payment method highlighting
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.style.borderColor = '#ddd';
+                opt.style.background = 'white';
+            });
+            this.style.borderColor = '#667eea';
+            this.style.background = 'rgba(102, 126, 234, 0.05)';
+        });
+    });
+    
+    // Impact calculator
+    function updateImpact(amount) {
+        const impactDisplay = document.getElementById('impactDisplay');
+        const amt = parseInt(amount);
+        
+        if (amt >= 10) {
+            let impact = '';
+            if (amt >= 500) {
+                const meals = Math.floor(amt / 50);
+                impact += `<div style="font-size: 2rem; margin-bottom: 0.5rem;">🍽️</div>`;
+                impact += `<p style="font-weight: 600; color: #2c3e50; font-size: 1.2rem;">Provide ${meals} meals</p>`;
+            }
+            if (amt >= 1000) {
+                impact += `<div style="font-size: 2rem; margin-bottom: 0.5rem; margin-top: 1rem;">📚</div>`;
+                impact += `<p style="font-weight: 600; color: #2c3e50; font-size: 1.2rem;">Support education materials</p>`;
+            }
+            if (amt >= 5000) {
+                impact += `<div style="font-size: 2rem; margin-bottom: 0.5rem; margin-top: 1rem;">🏥</div>`;
+                impact += `<p style="font-weight: 600; color: #2c3e50; font-size: 1.2rem;">Provide medical aid</p>`;
+            }
+            
+            impactDisplay.innerHTML = impact;
+        }
+    }
+    
+    // Form submission
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const amount = document.getElementById('amount').value;
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+        
+        if (!amount || amount < 10) {
+            alert('Please enter a minimum donation amount of ₹10');
+            return;
+        }
+        
+        if (!paymentMethod) {
+            alert('Please select a payment method');
+            return;
+        }
+        
+        // Show loading
+        const donateBtn = document.getElementById('donateBtn');
+        donateBtn.innerHTML = '🔄 Processing...';
+        donateBtn.disabled = true;
+        
+        // Simulate payment processing
+        setTimeout(() => {
+            this.submit();
+        }, 1500);
+    });
+</script>
+
+<style>
+    .amount-btn:hover {
+        border-color: #667eea !important;
+        background: rgba(102, 126, 234, 0.1) !important;
+    }
+    
+    .payment-option:hover {
+        border-color: #667eea !important;
+        background: rgba(102, 126, 234, 0.05) !important;
+    }
+    
+    #amount:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+</style>
+{% endblock %}

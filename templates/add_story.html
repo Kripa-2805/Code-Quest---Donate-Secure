@@ -1,0 +1,565 @@
+{% extends "base.html" %}
+
+{% block title %}Share Your Story{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="
+    background: linear-gradient(135deg, #232c51 0%, #39355c 100%);
+    border: 2px solid rgba(255,255,255,0.15); 
+    box-shadow: 0 15px 40px rgba(44,82,160,0.55);
+    border-radius: 24px;
+    margin: 2rem auto 2.5rem auto;
+    max-width: 700px;
+    text-align: center;
+    padding: 2.3rem 1.2rem 2rem 1.2rem;
+    position: relative;
+    ">
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">✏️</div>
+    <h1 style="
+        color: #fff;
+        font-size: 2.3rem;
+        font-weight: 900;
+        text-shadow: 0 3px 12px #5172d1;
+        margin-bottom: 1rem;
+        letter-spacing: 1.2px;
+    ">Share Your Impact Story</h1>
+    <p style="
+        color: #e0e0ef;
+        font-size: 1.1rem;
+        text-shadow: 0 2px 8px #1a1a3a;
+        font-weight: 400;
+        letter-spacing: 0.8px;
+        line-height: 1.4;
+    ">Inspire donors by sharing how their contributions have made a difference in people's lives</p>
+</section>
+
+<!-- Story Form -->
+<section style="margin: 2rem auto; max-width: 800px;">
+    <div class="card" style="padding: 2.5rem;">
+        <form action="{{ url_for('process_story') }}" method="POST" enctype="multipart/form-data" id="storyForm">
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="title" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin-bottom: 0.8rem;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    font-size: 1.1rem;
+                ">
+                    <i class="fas fa-heading" style="color: #667eea;"></i>
+                    Story Title
+                </label>
+                <input type="text" id="title" name="title" 
+                       placeholder="e.g., How We Provided Clean Water to 500 Families" 
+                       required maxlength="100" style="
+                       width: 100%;
+                       padding: 15px 20px;
+                       border: 2px solid rgba(255, 255, 255, 0.3);
+                       border-radius: 15px;
+                       background: rgba(255, 255, 255, 0.9);
+                       font-size: 1rem;
+                       transition: all 0.3s ease;
+                ">
+                <div style="
+                    text-align: right;
+                    font-size: 0.9rem;
+                    color: #666;
+                    margin-top: 0.5rem;
+                ">
+                    <span id="titleCount">0</span>/100 characters
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="content" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin-bottom: 0.8rem;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    font-size: 1.1rem;
+                ">
+                    <i class="fas fa-book-open" style="color: #667eea;"></i>
+                    Your Story
+                </label>
+                <textarea id="content" name="content" 
+                          placeholder="Tell us about the impact your organization has made. Include specific details about who was helped, how the problem was solved, and what difference it made in people's lives..."
+                          required maxlength="2000" style="
+                          width: 100%;
+                          padding: 15px 20px;
+                          border: 2px solid rgba(255, 255, 255, 0.3);
+                          border-radius: 15px;
+                          background: rgba(255, 255, 255, 0.9);
+                          font-size: 1rem;
+                          transition: all 0.3s ease;
+                          resize: vertical;
+                          min-height: 200px;
+                          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                          line-height: 1.6;
+                "></textarea>
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 0.9rem;
+                    color: #666;
+                    margin-top: 0.5rem;
+                ">
+                    <div id="readingInfo"></div>
+                    <div><span id="contentCount">0</span>/2000 characters</div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin-bottom: 0.8rem;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    font-size: 1.1rem;
+                ">
+                    <i class="fas fa-image" style="color: #667eea;"></i>
+                    Story Image (Optional)
+                </label>
+                <div class="image-upload" onclick="document.getElementById('image').click()" style="
+                    border: 2px dashed rgba(102, 126, 234, 0.3);
+                    border-radius: 15px;
+                    padding: 2rem;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    background: white;
+                ">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;"></i>
+                    <p style="margin-bottom: 0.5rem; color: #2c3e50; font-weight: 500;">Click to upload or drag and drop</p>
+                    <small style="color: #666;">PNG, JPG up to 5MB</small>
+                </div>
+                <input type="file" id="image" name="image" accept="image/*" style="display: none;">
+            </div>
+
+            <button type="submit" class="btn" style="
+                width: 100%;
+                padding: 18px;
+                font-size: 1.2rem;
+                background: linear-gradient(45deg, #2ecc71, #27ae60);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            " id="submitBtn">
+                <i class="fas fa-share"></i> Share Your Story
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Tips Section -->
+<section style="margin: 3rem auto; max-width: 800px;">
+    <div class="card" style="padding: 2.5rem;">
+        <h2 style="
+            color: #002f4e;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+        ">
+            <i class="fas fa-lightbulb"></i> Tips for a Great Story
+        </h2>
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        ">
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #3498db;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">🎯</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Start with the Problem</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Begin by describing the challenge your organization faced or the issue you addressed.</p>
+            </div>
+            
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #2ecc71;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">📊</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Include Numbers</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Share specific data: people helped, funds used, measurable outcomes.</p>
+            </div>
+            
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #f39c12;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">👥</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Personal Stories</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Include testimonials or personal accounts from beneficiaries when possible.</p>
+            </div>
+            
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #e74c3c;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">💝</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Connect to Donations</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Explain how donor contributions made this impact possible.</p>
+            </div>
+            
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #9b59b6;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">📸</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Visual Evidence</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Add photos that show your work in action and the people you've helped.</p>
+            </div>
+            
+            <div style="
+                padding: 1.5rem;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                border-left: 4px solid #1abc9c;
+            ">
+                <div style="font-size: 2rem; margin-bottom: 0.8rem;">📝</div>
+                <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Clear Language</h4>
+                <p style="color: #666; margin: 0; font-size: 0.9rem;">Use simple, clear language that everyone can understand and relate to.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Preview Section -->
+<section style="margin: 3rem auto; max-width: 800px;">
+    <div class="card" id="previewSection" style="padding: 2.5rem; display: none;">
+        <h2 style="
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+        ">
+            <i class="fas fa-eye"></i> Story Preview
+        </h2>
+        <div style="
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            border-left: 4px solid #2ecc71;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        ">
+            <h3 id="previewTitle" style="color: #27ae60; margin-bottom: 1rem; font-size: 1.4rem;">Your story title will appear here</h3>
+            <p id="previewContent" style="color: #666; line-height: 1.6; margin-bottom: 1rem;">Your story content will be shown here as you type...</p>
+            <small style="color: #999; font-style: italic; display: flex; align-items: center; gap: 0.3rem;">
+                <i class="fas fa-building"></i> Your Organization Name
+            </small>
+        </div>
+    </div>
+</section>
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    transform: translateY(-2px) !important;
+    outline: none;
+}
+
+.image-upload:hover {
+    border-color: #667eea !important;
+    background: rgba(102, 126, 234, 0.05) !important;
+    transform: translateY(-2px);
+}
+
+.image-upload.dragover {
+    border-color: #667eea !important;
+    background: rgba(102, 126, 234, 0.1) !important;
+    transform: scale(1.02);
+}
+
+.image-upload.uploaded {
+    border-color: #2ecc71 !important;
+    background: rgba(46, 204, 113, 0.05) !important;
+}
+</style>
+
+<script>
+// Character counters and preview
+document.getElementById('title').addEventListener('input', function() {
+    const count = this.value.length;
+    document.getElementById('titleCount').textContent = count;
+    
+    // Update preview
+    document.getElementById('previewTitle').textContent = this.value || 'Your story title will appear here';
+    
+    // Show preview if there's content
+    if (this.value || document.getElementById('content').value) {
+        document.getElementById('previewSection').style.display = 'block';
+    }
+});
+
+document.getElementById('content').addEventListener('input', function() {
+    const count = this.value.length;
+    document.getElementById('contentCount').textContent = count;
+    
+    // Word count and reading time
+    const words = this.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+    const readingTime = Math.ceil(words / 200);
+    
+    const readingInfo = document.getElementById('readingInfo');
+    if (words > 0) {
+        readingInfo.textContent = `${words} words • ~${readingTime} min read`;
+    } else {
+        readingInfo.textContent = '';
+    }
+    
+    // Update preview
+    document.getElementById('previewContent').textContent = this.value || 'Your story content will be shown here as you type...';
+    
+    // Show preview if there's content
+    if (this.value || document.getElementById('title').value) {
+        document.getElementById('previewSection').style.display = 'block';
+    }
+});
+
+// Image upload handling
+const imageUpload = document.querySelector('.image-upload');
+const imageInput = document.getElementById('image');
+
+imageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB');
+            this.value = '';
+            return;
+        }
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            this.value = '';
+            return;
+        }
+        
+        // Update upload area
+        imageUpload.innerHTML = `
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: #2ecc71; margin-bottom: 1rem;"></i>
+            <p style="margin-bottom: 0.5rem; color: #27ae60; font-weight: 600;">${file.name}</p>
+            <small style="color: #666;">Click to change image</small>
+        `;
+        imageUpload.classList.add('uploaded');
+    }
+});
+
+// Drag and drop functionality
+imageUpload.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('dragover');
+});
+
+imageUpload.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+});
+
+imageUpload.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        imageInput.files = files;
+        imageInput.dispatchEvent(new Event('change'));
+    }
+});
+
+// Form submission
+document.getElementById('storyForm').addEventListener('submit', function(e) {
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+    
+    if (!title || !content) {
+        e.preventDefault();
+        alert('Please fill in both title and content.');
+        return;
+    }
+    
+    if (title.length < 10) {
+        e.preventDefault();
+        alert('Title should be at least 10 characters long.');
+        document.getElementById('title').focus();
+        return;
+    }
+    
+    if (content.length < 50) {
+        e.preventDefault();
+        alert('Story content should be at least 50 characters long.');
+        document.getElementById('content').focus();
+        return;
+    }
+    
+    // Add loading state
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sharing Your Story...';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+});
+
+// Auto-save functionality
+function autoSave() {
+    const formData = {
+        title: document.getElementById('title').value,
+        content: document.getElementById('content').value,
+        timestamp: new Date().getTime()
+    };
+    localStorage.setItem('storyDraft', JSON.stringify(formData));
+}
+
+function loadDraft() {
+    const saved = localStorage.getItem('storyDraft');
+    if (saved) {
+        const data = JSON.parse(saved);
+        // Only load if saved within last 24 hours
+        if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+            if (data.title || data.content) {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    backdrop-filter: blur(5px);
+                `;
+                
+                modal.innerHTML = `
+                    <div style="
+                        background: white;
+                        padding: 2rem;
+                        border-radius: 15px;
+                        text-align: center;
+                        max-width: 400px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                    ">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">💾</div>
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Restore Draft?</h3>
+                        <p style="color: #666; margin-bottom: 2rem;">We found a saved draft from earlier. Would you like to restore it?</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <button onclick="restoreDraft(); this.closest('div').parentElement.remove();" style="
+                                background: linear-gradient(45deg, #667eea, #764ba2);
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 25px;
+                                cursor: pointer;
+                            ">Yes, Restore</button>
+                            <button onclick="this.closest('div').parentElement.remove();" style="
+                                background: #95a5a6;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 25px;
+                                cursor: pointer;
+                            ">No, Thanks</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                window.restoreDraft = function() {
+                    document.getElementById('title').value = data.title;
+                    document.getElementById('content').value = data.content;
+                    
+                    // Trigger input events to update counters
+                    document.getElementById('title').dispatchEvent(new Event('input'));
+                    document.getElementById('content').dispatchEvent(new Event('input'));
+                };
+            }
+        }
+    }
+}
+
+// Auto-save every 30 seconds
+setInterval(autoSave, 30000);
+
+// Auto-save on input
+document.getElementById('title').addEventListener('input', autoSave);
+document.getElementById('content').addEventListener('input', autoSave);
+
+// Clear draft on successful submission
+document.getElementById('storyForm').addEventListener('submit', function() {
+    localStorage.removeItem('storyDraft');
+});
+
+// Prevent accidental page leave
+window.addEventListener('beforeunload', function(e) {
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+    
+    if (title || content) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    loadDraft();
+    
+    // Entrance animations
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'all 0.8s ease';
+        
+        setTimeout(() => {
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+
+    // Focus on title field after animations
+    setTimeout(() => {
+        document.getElementById('title').focus();
+    }, 1500);
+});
+</script>
+{% endblock %}

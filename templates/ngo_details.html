@@ -1,0 +1,134 @@
+<!-- templates/ngo_details.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ ngo[2] }} - NGO Details{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('donor_dashboard') }}" style="color: #667eea; text-decoration: none; font-weight: 500;">← Back to Dashboard</a>
+</div>
+
+<div class="card">
+    <!-- NGO Header -->
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="color: #2c3e50; margin-bottom: 0.5rem;">{{ ngo[2] }}</h1>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">✅ Verified NGO</span>
+                <span style="background: #e8f4f8; color: #2c3e50; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.9rem;">ID: {{ ngo[10] }}</span>
+            </div>
+        </div>
+        <a href="{{ url_for('donate', ngo_id=ngo[0]) }}" class="btn btn-secondary" style="padding: 12px 24px; font-size: 1.1rem;">💝 Donate Now</a>
+    </div>
+
+    <!-- NGO Information Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem;">
+        <div>
+            <h3 style="color: #2c3e50; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">📋 Organization Details</h3>
+            
+            <div style="space-y: 1rem;">
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">📍 Location:</span>
+                    <span style="color: #666;">{{ ngo[3] }}</span>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">📞 Contact:</span>
+                    <span style="color: #666;">{{ ngo[4] }}</span>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">📧 Email:</span>
+                    <span style="color: #666;">{{ ngo[5] }}</span>
+                </div>
+                
+                {% if ngo[6] %}
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">🌐 Website:</span>
+                    <a href="{{ ngo[6] }}" target="_blank" style="color: #667eea; text-decoration: none;">Visit Website</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div>
+            <h3 style="color: #2c3e50; margin-bottom: 1.5rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">💳 Payment Information</h3>
+            
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4CAF50;">
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">🏦 Bank:</span>
+                    <span style="color: #666;">{{ ngo[7] }}</span>
+                </div>
+                
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">💳 Account:</span>
+                    <span style="color: #666;">{{ ngo[8] }}</span>
+                </div>
+                
+                {% if ngo[9] %}
+                <div style="display: flex; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50; min-width: 120px;">📱 UPI:</span>
+                    <span style="color: #666;">{{ ngo[9] }}</span>
+                </div>
+                {% endif %}
+                
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <p style="font-size: 0.9rem; color: #666; text-align: center;">🔒 All payments are secure and encrypted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Status -->
+    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 3rem;">
+        <h3 style="margin-bottom: 1rem;">🛡️ Verification Status</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                <p style="font-weight: 600;">NITI Aayog Verified</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
+                <p style="font-weight: 600;">Secure Payments</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                <p style="font-weight: 600;">Transparent Tracking</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">💎</div>
+                <p style="font-weight: 600;">Trusted Platform</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Stories -->
+    {% if stories %}
+    <div>
+        <h3 style="color: #2c3e50; margin-bottom: 2rem; border-bottom: 2px solid #667eea; padding-bottom: 0.5rem;">📚 Success Stories</h3>
+        
+        <div style="display: grid; gap: 2rem;">
+            {% for story in stories %}
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px; border-left: 4px solid #4CAF50;">
+                    <h4 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.2rem;">{{ story[0] }}</h4>
+                    <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">{{ story[1] }}</p>
+                    <div style="font-size: 0.9rem; color: #888;">📅 {{ story[2][:10] }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; background: #f8f9fa; border-radius: 15px;">
+        <h3 style="color: #666; margin-bottom: 1rem;">📚 No Stories Yet</h3>
+        <p style="color: #999;">This NGO hasn't shared any success stories yet. Be the first to help them create one!</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Call to Action -->
+<div class="card" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; text-align: center;">
+    <h2 style="margin-bottom: 1rem;">Ready to Make a Difference?</h2>
+    <p style="margin-bottom: 2rem; font-size: 1.1rem;">Your donation will directly support {{ ngo[2] }}'s mission and create real impact in the community.</p>
+    <a href="{{ url_for('donate', ngo_id=ngo[0]) }}" class="btn" style="background: white; color: #f5576c; padding: 15px 30px; font-size: 1.1rem; font-weight: 600;">💝 Donate Now</a>
+</div>
+{% endblock %}

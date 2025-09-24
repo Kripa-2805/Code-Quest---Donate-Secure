@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+{% block title %}Urgent Requirements{% endblock %}
+{% block extra_css %}
+<style>
+    .urgent-hero {
+        text-align: center;
+        padding: 3rem 0;
+        background: linear-gradient(135deg, rgba(44, 62, 80, 0.45), rgba(52, 73, 94, 0.45));
+        border-radius: 20px;
+        margin-bottom: 3rem;
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .urgent-hero h1 {
+        color: #fff;
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 4px 22px #080f12cc, 0 1px 2px #091015;
+        display: inline-block;
+    }
+    .urgent-hero p {
+        font-size: 1.25rem;
+        color: #ccc;
+        font-weight: 500;
+        opacity: 0.85;
+        margin: 0;
+    }
+    .requirements-grid {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin: 2rem auto 0 auto;
+        max-width: 960px;
+    }
+    .requirement-card {
+        background: #fff;
+        color: #222;
+        border-radius: 20px;
+        padding: 2rem 2.2rem;
+        border-left: 6px solid #28a745;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 270px;
+    }
+    .requirement-card:hover {
+        box-shadow: 0 16px 48px rgba(40, 167, 69, 0.35);
+        transform: translateY(-6px);
+    }
+    .requirement-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .requirement-header .requirement-info h2,
+    .requirement-header .requirement-info h3 {
+        margin: 0 0 0.25rem 0;
+        color: #1c2832;
+        font-weight: 800;
+        font-size: 1.75rem;
+    }
+    .requirement-header .requirement-info .requirement-org {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #188f52;
+        font-style: italic;
+    }
+    .urgency-badge {
+        background: #28a745;
+        color: #fff;
+        padding: 0.45em 1em;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        animation: pulse 2.5s infinite;
+        text-transform: uppercase;
+    }
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+    }
+    .requirement-description {
+        background: #f8f9fa;
+        box-shadow: inset 0 0 24px #a3d2a7aa;
+        border-radius: 12px;
+        color: #414141;
+        padding: 1.25em 1.15em;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 1rem 0 1.3rem 0;
+        flex-grow: 1;
+    }
+    .progress-section {
+        margin: 1rem 0;
+    }
+    .progress-bar {
+        width: 100%;
+        height: 14px;
+        background: #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: inset 0 0 10px #b5deb898;
+        margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #42b72a, #2d9f1a);
+        border-radius: 8px;
+        box-shadow: 0 0 30px #40cb2bbb;
+        position: relative;
+        transition: width 1s ease;
+    }
+    .progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shine 3s infinite linear;
+    }
+    @keyframes shine {
+        0% {transform: translateX(-100%);}
+        100% {transform: translateX(100%);}
+    }
+    .progress-section .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1rem;
+        color: #28a745;
+        font-weight: 600;
+    }
+    .deadline-info {
+        border-top: 2px solid #e1e6e4;
+        margin-top: 1.5rem;
+        padding-top: 1.15rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .deadline-info > div {
+        color: #2e7d32;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    .deadline-info .deadline {
+        display: flex;
+        align-items: center;
+        gap: 0.3em;
+    }
+    .deadline-info .deadline i {
+        font-size: 1.15rem;
+        color: #4a9d6b;
+    }
+    .donate-btn {
+        background: #28a745;
+        color: #fff;
+        padding: 0.65em 1.8em;
+        border-radius: 26px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        border: none;
+        transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        box-shadow: 0 0 10px #4dbd3f;
+    }
+    .donate-btn:hover {
+        background: #218e25;
+        box-shadow: 0 0 16px #4dbd3f;
+        transform: translateY(-4px);
+    }
+    .empty-state {
+        background: #fff;
+        max-width: 600px;
+        margin: 3rem auto;
+        padding: 2.8rem 2.25rem;
+        border-radius: 20px;
+        box-shadow: 0 12px 24px #0003;
+        color: #545454;
+        text-align: center;
+    }
+    .empty-state i {
+        font-size: 6rem;
+        margin-bottom: 1rem;
+        color: #bbb;
+    }
+    .empty-state h3 {
+        margin-bottom: 0.7rem;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    .empty-state p {
+        font-size: 1.15rem;
+        line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+        .requirements-grid {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .requirement-card {
+            width: 95% !important;
+            min-width: auto !important;
+            margin: 0 auto 1.7rem;
+            height: auto !important;
+            display: block;
+        }
+        .donate-btn {
+            width: 100%;
+            font-size: 1.1rem;
+        }
+        .deadline-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div style="text-align:center; margin: 0 auto 2.6rem auto; max-width:800px;">
+  <h1 style="
+    color: #fff;
+    background: none;
+    font-size: 3.1rem;
+    font-weight: 900;
+    text-shadow: 0 4px 22px #3b4978bb, 0 1px 2px #191b21;
+    letter-spacing:1.6px;
+    line-height:1.1;
+    margin-bottom:0.7rem;">
+  <i class="fas fa-exclamation-triangle"></i> Urgent Requirements
+</h1>
+
+  <div style="
+    color: #fff;
+    margin-top:1rem;
+    font-size: 1.19rem;
+    font-weight: 500;
+    text-shadow: 0 1px 10px #501b1b44;
+    ">
+    Time-sensitive causes that need immediate help from generous donors like you
+  </div>
+</div>
+
+<div role="main" class="card" aria-label="Urgent needs">
+    <h2>
+        <i class="fas fa-hand-holding-medical" aria-hidden="true"></i> Help Needed Now
+        {% if requirements %}
+            <span aria-live="polite"> ({{ requirements|length }} urgent needs)</span>
+        {% endif %}
+    </h2>
+    {% if requirements %}
+    <div class="requirements-grid">
+        {% for req in requirements %}
+<div style="
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px #8888;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-left: 6px solid #4CAF50;
+    color: #222;
+    ">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 style="font-weight: 700; font-size: 1.7rem; margin: 0 0 0.3rem 0;">{{ req[1] }}</h2>
+      <div style="font-weight: 600; color: #4CAF50;">{{ req[6] }}</div>
+    </div>
+    <time style="font-size: 1rem; color: #456;" datetime="{{ req[5] }}">{{ req[5] or 'Ongoing' }}</time>
+  </div>
+
+  <section style="margin-top: 1rem; background: #F5F8FA; padding: 1rem 1.3rem; border-radius: 10px; color: #444;">
+    {{ req[2] }}
+  </section>
+
+  <div style="display: flex; justify-content: space-between; margin-top: 1.3rem; font-weight: 600; color:#3a6e3a;">
+    <span>₹{{ req[4] }} raised</span>
+    <span>₹{{ req[3] }} needed</span>
+    <span>{{ (req[4]/req[3]*100) | round(2) }}% Complete</span>
+  </div>
+
+  <a href="{{ url_for('donate', ngo_id=req[7]) }}" style="
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.7rem 1.9rem;
+      background: #4CAF50;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 0 10px #64bb64;
+      transition: background 0.3s;
+  ">Donate Now</a>
+</div>
+{% endfor %}
+
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-ban" aria-hidden="true"></i>
+        <h3>No Urgent Requirements Found</h3>
+        <p>Currently, there are no urgent requirements from verified NGOs.</p>
+        <a class="btn" href="{{ url_for('donor_dashboard') }}">Browse NGOs</a>
+    </div>
+    {% endif %}
+</div>
+<div class="card" aria-label="How your donation helps" role="complementary" style="margin-top: 3rem;">
+    <h3 style="color:#34a9d9; text-align:center;">
+        <i class="fas fa-info-circle" aria-hidden="true"></i> How Your Donation Helps
+    </h3>
+    <div style="display: flex; justify-content: center; gap:2rem; flex-wrap: wrap; margin-top: 2rem;">
+        <div style="background: #fff; border-radius: 0.75rem; box-shadow: 0 4px 24px #a1c5e6cc; text-align: center; padding: 3rem 1.5rem; min-width: 270px; height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <i class="fas fa-tachometer-alt" style="font-size: 2.2rem; color: #2d6db3;"></i>
+            <h4 style="margin-top: 1rem;">Immediate Impact</h4>
+            <p style="font-size: 1rem;">
+                Your donation reaches the cause immediately, making a direct difference in urgent situations.
+            </p>
+        </div>
+        <div style="background: #fff; border-radius: 0.75rem; box-shadow: 0 4px 24px #93d495cc; text-align: center; padding: 3rem 1.5rem; min-width: 270px; height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <i class="fas fa-eye" style="font-size: 2.2rem; color: #3ac940;"></i>
+            <h4 style="margin-top: 1rem;">Full Transparency</h4>
+            <p style="font-size: 1rem;">
+                Track exactly how your money is used with detailed reports and real-time updates.
+            </p>
+        </div>
+        <div style="background: #fff; border-radius: 0.75rem; box-shadow: 0 4px 24px #f0ce5acc; text-align: center; padding: 3rem 1.5rem; min-width: 270px; height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <i class="fas fa-certificate" style="font-size: 2.2rem; color: #e0b72c;"></i>
+            <h4 style="margin-top: 1rem;">Verified Causes</h4>
+            <p style="font-size: 1rem;">
+                All requirements are verified and posted by NITI Aayog registered NGOs.
+            </p>
+        </div>
+    </div>
+</div>
+<div class="card" aria-label="Call to action" role="complementary" style="margin: 3rem auto; max-width: 960px; padding: 1.5rem 2rem; text-align: center; background: linear-gradient(to right, #fd6961, #d93627); border-radius: 15px; box-shadow: 0 0 30px #d9362777;">
+    <h3 style="color:#fff; font-weight: 800; font-size: 1.5rem;">
+        <i class="fas fa-bolt" aria-hidden="true"></i> Every Second Counts
+    </h3>
+    <p style="color:#ffeaea; font-size: 1.1rem;">
+        Your support can make the difference between hope and despair. Act now and save lives.
+    </p>
+    {% if not session.user_id %}
+    <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="{{ url_for('register', role='donor') }}" class="btn" style="background: #fff; color: #d93627; font-weight: 700;">
+            <i class="fas fa-heart"></i> Join as Donor
+        </a>
+        <a href="{{ url_for('login') }}" class="btn" style="background: transparent; border: 2px solid #fff; color: #fff;">
+            <i class="fas fa-sign-in-alt"></i> Login to Donate
+        </a>
+    </div>
+    {% else %}
+    <a href="{{ url_for('donor_dashboard') }}" class="btn" style="background: #fff; color: #d93627; font-weight: 700;">
+        Browse NGOs
+    </a>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+    // Animations and effects script as before, no changes needed
+</script>
+<style>
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        pointer-events: none;
+    }
+    @keyframes rippleEffect {
+        0% {
+            transform: scale(0);
+            opacity: 0.4;
+        }
+        100% {
+            transform: scale(2.5);
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% endblock %}

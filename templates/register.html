@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+
+{% block title %}Register - {{ role.title() }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="
+    background: linear-gradient(135deg, #232c51 0%, #39355c 100%);
+    border: 2px solid rgba(255,255,255,0.15); 
+    box-shadow: 0 15px 40px rgba(44,82,160,0.55);
+    border-radius: 24px;
+    margin: 2rem auto 2.5rem auto;
+    max-width: 600px;
+    text-align: center;
+    padding: 2rem 1.2rem;
+    position: relative;
+    ">
+    {% if role == 'donor' %}
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">💝</div>
+        <h1 style="
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 3px 12px #5172d1;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1.2px;
+        ">Register as Donor</h1>
+        <p style="
+            color: #e0e0ef;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 8px #1a1a3a;
+            font-weight: 400;
+            letter-spacing: 0.8px;
+        ">Join our community of generous donors making real impact</p>
+    {% else %}
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">🏢</div>
+        <h1 style="
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 3px 12px #5172d1;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1.2px;
+        ">Register Your NGO</h1>
+        <p style="
+            color: #e0e0ef;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 8px #1a1a3a;
+            font-weight: 400;
+            letter-spacing: 0.8px;
+        ">Get verified and start receiving transparent donations</p>
+    {% endif %}
+</section>
+
+<!-- Registration Form -->
+<section style="margin: 2rem auto; max-width: 500px;">
+    <div class="card" style="padding: 2.5rem;">
+        <form action="{{ url_for('process_register') }}" method="POST" id="registerForm">
+            <input type="hidden" name="user_type" value="{{ role }}">
+            
+            <div class="form-group">
+                <label for="email" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-envelope" style="color: #667eea;"></i>
+                    Email Address
+                </label>
+                <input type="email" name="email" id="email" placeholder="Enter your email address" required 
+                       style="padding-left: 15px;">
+                <div id="email-feedback" style="font-size: 0.85rem; margin-top: 0.3rem;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-lock" style="color: #667eea;"></i>
+                    Password
+                </label>
+                <div style="position: relative;">
+                    <input type="password" name="password" id="password" placeholder="Create a strong password" required>
+                    <i class="fas fa-eye" id="togglePassword" style="
+                        position: absolute;
+                        right: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        color: #667eea;
+                    "></i>
+                </div>
+                <div style="height: 4px; background: #e9ecef; border-radius: 2px; margin-top: 0.5rem; overflow: hidden;">
+                    <div id="strengthFill" style="
+                        height: 100%;
+                        width: 0;
+                        transition: all 0.3s ease;
+                        border-radius: 2px;
+                    "></div>
+                </div>
+                <ul id="passwordRequirements" style="
+                    font-size: 0.8rem;
+                    color: #333;
+                    margin-top: 0.8rem;
+                    list-style: none;
+                    padding: 0;
+                ">
+                    <li id="length" style="margin: 0.3rem 0; transition: color 0.3s ease;">
+                        <i class="fas fa-times" style="color: #e74c3c; margin-right: 0.5rem; width: 12px;"></i>
+                        At least 8 characters
+                    </li>
+                    <li id="uppercase" style="margin: 0.3rem 0; transition: color 0.3s ease;">
+                        <i class="fas fa-times" style="color: #e74c3c; margin-right: 0.5rem; width: 12px;"></i>
+                        One uppercase letter
+                    </li>
+                    <li id="lowercase" style="margin: 0.3rem 0; transition: color 0.3s ease;">
+                        <i class="fas fa-times" style="color: #e74c3c; margin-right: 0.5rem; width: 12px;"></i>
+                        One lowercase letter
+                    </li>
+                    <li id="number" style="margin: 0.3rem 0; transition: color 0.3s ease;">
+                        <i class="fas fa-times" style="color: #e74c3c; margin-right: 0.5rem; width: 12px;"></i>
+                        One number
+                    </li>
+                    <li id="special" style="margin: 0.3rem 0; transition: color 0.3s ease;">
+                        <i class="fas fa-times" style="color: #e74c3c; margin-right: 0.5rem; width: 12px;"></i>
+                        One special character
+                    </li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-lock" style="color: #667eea;"></i>
+                    Confirm Password
+                </label>
+                <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm your password" required>
+                <div id="confirm-feedback" style="font-size: 0.85rem; margin-top: 0.3rem;"></div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn" style="
+                width: 100%;
+                padding: 15px;
+                font-size: 1.1rem;
+                margin-top: 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            ">
+                {% if role == 'donor' %}
+                    <i class="fas fa-heart"></i> Register as Donor
+                {% else %}
+                    <i class="fas fa-building"></i> Register NGO
+                {% endif %}
+            </button>
+        </form>
+
+        <div style="
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        ">
+            <p style="color: #666; margin-bottom: 0.5rem;">Already have an account?</p>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary" style="
+                padding: 10px 25px;
+                font-size: 0.95rem;
+            ">
+                <i class="fas fa-sign-in-alt"></i> Login Here
+            </a>
+        </div>
+    </div>
+</section>
+
+{% if role == 'receiver' %}
+<!-- Next Steps Section -->
+<section style="margin: 3rem auto; max-width: 800px;">
+    <div class="card">
+        <h2 style="
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        ">
+            🎯 Next Steps After Registration
+        </h2>
+        
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        ">
+            <div style="text-align: center; padding: 1.5rem;">
+                <div style="
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                    color: #0d466c;
+                    filter: drop-shadow(0 2px 4px rgba(52, 152, 219, 0.3));
+                ">📝</div>
+                <h3 style="color: #2c3e50; margin-bottom: 0.8rem; font-size: 1.2rem;">Complete Profile</h3>
+                <p style="color: #333; font-size: 0.95rem; line-height: 1.4;">
+                    Fill in your organization details, bank information, and NITI Aayog ID
+                </p>
+            </div>
+            
+            <div style="text-align: center; padding: 1.5rem;">
+                <div style="
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                    color: #f39c12;
+                    filter: drop-shadow(0 2px 4px rgba(243, 156, 18, 0.3));
+                ">🔍</div>
+                <h3 style="color: #2c3e50; margin-bottom: 0.8rem; font-size: 1.2rem;">Auto Verification</h3>
+                <p style="color: #333; font-size: 0.95rem; line-height: 1.4;">
+                    Our system automatically verifies your NITI Aayog registration
+                </p>
+            </div>
+            
+            <div style="text-align: center; padding: 1.5rem;">
+                <div style="
+                    font-size: 3rem;
+                    margin-bottom: 1rem;
+                    color: #0d7338;
+                    filter: drop-shadow(0 2px 4px rgba(46, 204, 113, 0.3));
+                ">💰</div>
+                <h3 style="color: #2c3e50; margin-bottom: 0.8rem; font-size: 1.2rem;">Start Receiving</h3>
+                <p style="color: #333; font-size: 0.95rem; line-height: 1.4;">
+                    Get approved and start receiving transparent donations from donors
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section style="margin: 3rem auto; max-width: 600px;">
+    <div class="card" style="
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        text-align: center;
+    ">
+        <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">
+            ✨ Why Choose DonateSecure for Your NGO?
+        </h2>
+        
+        <div style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        ">
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <i class="fas fa-shield-alt" style="font-size: 1.5rem; color: rgba(255,255,255,0.9);"></i>
+                <span style="font-weight: 500;">100% Secure Platform</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <i class="fas fa-eye" style="font-size: 1.5rem; color: rgba(255,255,255,0.9);"></i>
+                <span style="font-weight: 500;">Full Transparency</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <i class="fas fa-bolt" style="font-size: 1.5rem; color: rgba(255,255,255,0.9);"></i>
+                <span style="font-weight: 500;">Instant Verification</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <i class="fas fa-users" style="font-size: 1.5rem; color: rgba(255,255,255,0.9);"></i>
+                <span style="font-weight: 500;">Trusted by Donors</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.form-group input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.requirements-list li.valid {
+    color: #0d7338 !important;
+}
+
+.requirements-list li.valid i {
+    color: #0d7338 !important;
+}
+
+.strength-fill.weak { background: #e74c3c; width: 25%; }
+.strength-fill.fair { background: #f39c12; width: 50%; }
+.strength-fill.good { background: #3498db; width: 75%; }
+.strength-fill.strong { background: #0d7338; width: 100%; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password visibility toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const password = document.getElementById('password');
+        const icon = this;
+        
+        if (password.type === 'password') {
+            password.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            password.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+
+    // Password strength checker
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const strengthFill = document.getElementById('strengthFill');
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+
+        // Update requirement indicators
+        Object.keys(requirements).forEach(req => {
+            const element = document.getElementById(req);
+            const icon = element.querySelector('i');
+            
+            if (requirements[req]) {
+                element.classList.add('valid');
+                element.style.color = '#0d7338';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-check');
+            } else {
+                element.classList.remove('valid');
+                element.style.color = '#666';
+                icon.classList.remove('fa-check');
+                icon.classList.add('fa-times');
+                icon.style.color = '#e74c3c';
+            }
+        });
+
+        // Calculate strength
+        const validCount = Object.values(requirements).filter(Boolean).length;
+        strengthFill.className = 'strength-fill';
+        
+        if (validCount === 0) {
+            strengthFill.style.width = '0%';
+        } else if (validCount <= 2) {
+            strengthFill.classList.add('weak');
+        } else if (validCount <= 3) {
+            strengthFill.classList.add('fair');
+        } else if (validCount <= 4) {
+            strengthFill.classList.add('good');
+        } else {
+            strengthFill.classList.add('strong');
+        }
+    });
+
+    // Confirm password checker
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+        const feedback = document.getElementById('confirm-feedback');
+        
+        if (confirmPassword === '') {
+            feedback.innerHTML = '';
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            feedback.innerHTML = '<span style="color: #0d7338;"><i class="fas fa-check"></i> Passwords match</span>';
+        } else {
+            feedback.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-times"></i> Passwords do not match</span>';
+        }
+    });
+
+    // Email validation
+    document.getElementById('email').addEventListener('input', function() {
+        const email = this.value;
+        const feedback = document.getElementById('email-feedback');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (email === '') {
+            feedback.innerHTML = '';
+            return;
+        }
+        
+        if (emailRegex.test(email)) {
+            feedback.innerHTML = '<span style="color: #0d7338;"><i class="fas fa-check"></i> Valid email format</span>';
+        } else {
+            feedback.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-times"></i> Invalid email format</span>';
+        }
+    });
+
+    // Form submission validation
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        // Check email
+        if (!emailRegex.test(email)) {
+            e.preventDefault();
+            alert('Please enter a valid email address.');
+            return;
+        }
+        
+        // Check password strength
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+        
+        const validCount = Object.values(requirements).filter(Boolean).length;
+        if (validCount < 4) {
+            e.preventDefault();
+            alert('Password must meet at least 4 out of 5 requirements.');
+            return;
+        }
+        
+        // Check password match
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match.');
+            return;
+        }
+        
+        // Add loading state
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

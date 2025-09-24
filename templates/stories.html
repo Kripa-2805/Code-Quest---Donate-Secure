@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Success Stories{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="padding: 5rem 0; text-align: center;">
+    <h1 style="font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">📚 Success Stories</h1>
+    <p style="font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); max-width: 600px; margin: 0 auto;">Inspiring stories of impact and transformation from our verified NGO partners</p>
+</section>
+
+<!-- Search Bar -->
+<div class="card" style="margin-bottom: 2rem; text-align: center;">
+    <div style="max-width: 500px; margin: 0 auto;">
+        <input type="text" placeholder="🔍 Search stories by title or organization..." 
+               style="width: 100%; padding: 15px 20px; border: 2px solid #667eea; border-radius: 30px; font-size: 1rem; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    </div>
+</div>
+
+<!-- Stories Section -->
+<section style="margin: 3rem 0;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="color: white; font-size: 2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); margin-bottom: 0.5rem;">💝 Stories of Hope and Change</h2>
+        <p style="color: white; opacity: 0.9; font-size: 1.1rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">({{ stories|length }} stories)</p>
+    </div>
+    
+    {% if stories %}
+        <div style="display: grid; gap: 2rem;">
+            {% for story in stories %}
+                <div class="card" style="background: white; border-left: 5px solid #4CAF50; transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'">
+                    
+                    <!-- Story Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h3 style="color: #2c3e50; font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 600;">{{ story[0] }}</h3>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <span style="background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">✅ Verified Impact</span>
+                                <span style="color: #667eea; font-weight: 500; font-size: 0.95rem;">🏢 {{ story[2] }}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="color: #888; font-size: 0.9rem; background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 15px;">📅 {{ story[3][:10] }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Story Content -->
+                    <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; border-left: 4px solid #667eea;">
+                        <p style="color: #555; line-height: 1.8; font-size: 1.05rem; text-align: justify;">{{ story[1] }}</p>
+                    </div>
+                    
+                    <!-- Story Footer -->
+                    <div style="display: flex; justify-content: between; align-items: center; padding-top: 1rem; border-top: 1px solid #eee;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <span style="color: #4CAF50; font-size: 1.1rem;">💚</span>
+                            <span style="color: #666; font-size: 0.9rem;">Lives impacted through your donations</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Element -->
+                    <div style="position: absolute; top: -10px; right: 20px; width: 40px; height: 40px; background: linear-gradient(45deg, #4CAF50, #45a049); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);">📖</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- No Stories Message -->
+        <div class="card" style="text-align: center; background: rgba(255, 255, 255, 0.95); padding: 4rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.6;">📚</div>
+            <h3 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 1rem;">No Stories Available Yet</h3>
+            <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Be the first to create inspiring success stories by supporting our verified NGO partners!
+            </p>
+            <a href="{{ url_for('choose_role') }}" class="btn" style="padding: 15px 30px; font-size: 1.1rem;">🌟 Start Your Impact Journey</a>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Call to Action -->
+<section class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-align: center; margin-top: 4rem;">
+    <h2 style="margin-bottom: 1rem; font-size: 2rem;">✨ Have Your Own Story?</h2>
+    <p style="margin-bottom: 2rem; font-size: 1.1rem; opacity: 0.95; max-width: 600px; margin-left: auto; margin-right: auto;">
+        Are you an NGO with an inspiring story to tell? Share your impact with our community!
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('register', role='receiver') }}" class="btn" style="background: #4CAF50; border: none;">📝 Register NGO</a>
+        <a href="{{ url_for('choose_role') }}" class="btn" style="background: rgba(255,255,255,0.2); border: 2px solid white;">💝 Become a Donor</a>
+    </div>
+</section>
+
+<script>
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[placeholder*="Search"]');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const stories = document.querySelectorAll('.card[onmouseover]');
+                
+                stories.forEach(story => {
+                    const title = story.querySelector('h3').textContent.toLowerCase();
+                    const org = story.textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || org.includes(searchTerm)) {
+                        story.style.display = 'block';
+                    } else {
+                        story.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

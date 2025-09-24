@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}Post Urgent Requirement{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <!-- Header Section -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1)); text-align: center; margin-bottom: 2rem; border-left: 4px solid #e74c3c;">
+        <h1 style="color: #fff; margin-bottom: 1rem; font-size: 2.2rem; font-weight: 700; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+            🚨 Post Urgent Requirement
+        </h1>
+        <p style="font-size: 1.1rem; color: #fff; line-height: 1.5; opacity: 0.9;">
+            Reach out to generous donors when you need immediate help for critical situations
+        </p>
+    </div>
+
+    <!-- Main Form -->
+    <div class="card">
+        <form action="{{ url_for('process_urgent_requirement') }}" method="POST" id="urgentForm">
+            <div class="form-group">
+                <label for="title" style="color: #2c3e50; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    📝 Requirement Title <span style="color: #e74c3c;">*</span>
+                </label>
+                <input type="text" id="title" name="title" 
+                       placeholder="e.g., Emergency Medical Equipment for COVID Patients" 
+                       required maxlength="100"
+                       style="width: 100%; padding: 12px 15px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.9); font-size: 1rem; transition: all 0.3s ease;">
+                <small style="color: #666; margin-top: 0.5rem; display: block;">Be specific and clear about what you need</small>
+            </div>
+
+            <div class="form-group">
+                <label for="description" style="color: #2c3e50; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    📄 Detailed Description <span style="color: #e74c3c;">*</span>
+                </label>
+                <textarea id="description" name="description" 
+                          placeholder="Explain the urgent situation, why immediate help is needed, how the funds will be used, and the impact it will have..."
+                          required maxlength="1000" rows="6"
+                          style="width: 100%; padding: 12px 15px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.9); font-size: 1rem; transition: all 0.3s ease; resize: vertical; font-family: inherit; line-height: 1.6;"></textarea>
+                <small style="color: #666; margin-top: 0.5rem; display: block;">Provide clear details about the emergency and how donations will help</small>
+            </div>
+
+            <div class="form-group">
+                <label for="amount_needed" style="color: #2c3e50; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    💰 Amount Needed <span style="color: #e74c3c;">*</span>
+                </label>
+                <div style="position: relative;">
+                    <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #e74c3c; font-weight: bold; font-size: 1.1rem;">₹</span>
+                    <input type="number" id="amount_needed" name="amount_needed" 
+                           min="1000" max="10000000" step="100" 
+                           placeholder="Enter the total amount required" required
+                           style="width: 100%; padding: 12px 15px 12px 35px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.9); font-size: 1rem; transition: all 0.3s ease;">
+                </div>
+                <small style="color: #666; margin-top: 0.5rem; display: block;">Minimum ₹1,000 • Be realistic about the actual cost</small>
+            </div>
+
+            <div class="form-group">
+                <label for="deadline" style="color: #2c3e50; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    📅 Target Deadline (Optional)
+                </label>
+                <input type="date" id="deadline" name="deadline"
+                       style="width: 100%; padding: 12px 15px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.9); font-size: 1rem; transition: all 0.3s ease;">
+                <div style="background: rgba(52, 152, 219, 0.1); border-radius: 10px; padding: 1rem; margin-top: 0.5rem; border-left: 3px solid #3498db;">
+                    <strong style="color: #3498db;">💡 Tip:</strong> Setting a deadline creates urgency and motivates donors to act quickly. Leave blank if the need is ongoing.
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 600; background: linear-gradient(45deg, #e74c3c, #c0392b); margin-top: 1rem;">
+                📢 Post Urgent Requirement
+            </button>
+        </form>
+    </div>
+
+    <!-- Live Preview -->
+    <div class="card" id="previewSection" style="display: none; margin-top: 2rem; background: rgba(255, 255, 255, 0.15); border: 2px dashed rgba(231, 76, 60, 0.3);">
+        <h3 style="color: #2c3e50; margin-bottom: 1.5rem; font-size: 1.5rem;">
+            👁️ How It Will Look to Donors
+        </h3>
+        <div style="background: rgba(255, 255, 255, 0.8); border-radius: 15px; padding: 1.5rem; border-left: 4px solid #e74c3c;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div>
+                    <h4 id="previewTitle" style="color: #e74c3c; margin-bottom: 0.5rem; font-weight: 600;">Your requirement title will appear here</h4>
+                    <small style="color: #666;">🏢 Your Organization Name</small>
+                </div>
+                <div style="background: #e74c3c; color: white; padding: 0.4rem 0.8rem; border-radius: 15px; font-size: 0.8rem; font-weight: 500;">
+                    🚨 URGENT
+                </div>
+            </div>
+            
+            <p id="previewDescription" style="color: #666; line-height: 1.6; margin-bottom: 1rem;">
+                Your detailed description will be shown here...
+            </p>
+            
+            <div style="margin: 1rem 0;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                    <span style="font-weight: 600;">₹0 raised</span>
+                    <span id="previewAmount" style="color: #666;">₹0 needed</span>
+                </div>
+                <div style="background: #e9ecef; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 0.3rem;">
+                    <div style="background: linear-gradient(45deg, #667eea, #764ba2); height: 100%; transition: width 0.3s ease; width: 0%;"></div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <small id="previewDeadline" style="color: #e74c3c;">
+                    📅 No deadline set
+                </small>
+                <button style="background: linear-gradient(45deg, #e74c3c, #c0392b); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; cursor: pointer;">
+                    ❤️ Donate Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guidelines -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.2)); margin-top: 2rem;">
+        <h3 style="color: #fff; margin-bottom: 1.5rem; font-size: 1.4rem; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            ℹ️ Guidelines for Urgent Requirements
+        </h3>
+        <ul style="color: #fff; line-height: 1.8; padding-left: 1.5rem; opacity: 0.95;">
+            <li><strong style="color: #fff;">Be Genuine:</strong> Only post truly urgent needs that require immediate attention</li>
+            <li><strong style="color: #fff;">Provide Details:</strong> Explain exactly how the funds will be used</li>
+            <li><strong style="color: #fff;">Set Realistic Goals:</strong> Request amounts that reflect actual costs</li>
+            <li><strong style="color: #fff;">Update Regularly:</strong> Keep donors informed about the progress</li>
+            <li><strong style="color: #fff;">Show Gratitude:</strong> Thank donors and share how their help made a difference</li>
+            <li><strong style="color: #fff;">Be Transparent:</strong> Provide receipts and updates on fund utilization</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+/* Focus styles for inputs */
+input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Form validation styles */
+input:invalid {
+    border-color: #e74c3c;
+}
+
+input:valid {
+    border-color: #27ae60;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .card {
+        padding: 1.5rem !important;
+    }
+    
+    h1 {
+        font-size: 1.8rem !important;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* Smooth animations */
+.form-group input, .form-group textarea {
+    transition: all 0.3s ease;
+}
+
+.form-group input:hover, .form-group textarea:hover {
+    border-color: rgba(231, 76, 60, 0.5);
+}
+
+/* Preview section animations */
+#previewSection {
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('deadline').min = today;
+    
+    // Focus on title field after a short delay
+    setTimeout(() => {
+        document.getElementById('title').focus();
+    }, 500);
+});
+
+// Real-time preview updates
+document.getElementById('title').addEventListener('input', function() {
+    document.getElementById('previewTitle').textContent = this.value || 'Your requirement title will appear here';
+    showPreview();
+});
+
+document.getElementById('description').addEventListener('input', function() {
+    const text = this.value || 'Your detailed description will be shown here...';
+    document.getElementById('previewDescription').textContent = text.length > 150 ? text.substring(0, 150) + '...' : text;
+    showPreview();
+});
+
+document.getElementById('amount_needed').addEventListener('input', function() {
+    const amount = this.value ? parseFloat(this.value).toLocaleString() : '0';
+    document.getElementById('previewAmount').textContent = `₹${amount} needed`;
+    showPreview();
+});
+
+document.getElementById('deadline').addEventListener('change', function() {
+    const deadlineEl = document.getElementById('previewDeadline');
+    if (this.value) {
+        const date = new Date(this.value);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        deadlineEl.innerHTML = `📅 Deadline: ${date.toLocaleDateString('en-US', options)}`;
+    } else {
+        deadlineEl.innerHTML = '📅 No deadline set';
+    }
+    showPreview();
+});
+
+function showPreview() {
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const amount = document.getElementById('amount_needed').value;
+    
+    if (title || description || amount) {
+        document.getElementById('previewSection').style.display = 'block';
+    }
+}
+
+// Form validation
+document.getElementById('urgentForm').addEventListener('submit', function(e) {
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const amount = document.getElementById('amount_needed').value;
+    
+    if (!title || !description || !amount) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    if (parseFloat(amount) < 1000) {
+        e.preventDefault();
+        alert('Minimum amount should be ₹1,000');
+        document.getElementById('amount_needed').focus();
+        return;
+    }
+    
+    // Confirmation dialog
+    if (!confirm('Are you sure you want to post this urgent requirement? It will be visible to all donors immediately.')) {
+        e.preventDefault();
+        return;
+    }
+    
+    // Add loading state
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Posting Requirement...';
+    submitBtn.disabled = true;
+    
+    // Re-enable if form submission fails
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 5000);
+});
+
+// Amount input formatting
+document.getElementById('amount_needed').addEventListener('input', function() {
+    // Remove any non-digit characters except decimal point
+    let value = this.value.replace(/[^\d.]/g, '');
+    
+    // Ensure only one decimal point
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // Limit to reasonable amount
+    const numValue = parseFloat(value);
+    if (numValue > 10000000) {
+        value = '10000000';
+    }
+    
+    this.value = value;
+});
+
+// Character counter for description
+document.getElementById('description').addEventListener('input', function() {
+    const maxLength = 1000;
+    const currentLength = this.value.length;
+    const remaining = maxLength - currentLength;
+    
+    // Find or create character counter
+    let counter = this.parentNode.querySelector('.char-counter');
+    if (!counter) {
+        counter = document.createElement('small');
+        counter.className = 'char-counter';
+        counter.style.float = 'right';
+        counter.style.color = '#666';
+        this.parentNode.appendChild(counter);
+    }
+    
+    counter.textContent = `${currentLength}/${maxLength} characters`;
+    counter.style.color = remaining < 50 ? '#e74c3c' : '#666';
+});
+
+// Auto-save draft functionality
+function saveDraft() {
+    const draft = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        amount_needed: document.getElementById('amount_needed').value,
+        deadline: document.getElementById('deadline').value,
+        timestamp: new Date().getTime()
+    };
+    localStorage.setItem('urgentRequirementDraft', JSON.stringify(draft));
+}
+
+// Save draft every 30 seconds
+setInterval(saveDraft, 30000);
+
+// Save on input change
+document.querySelectorAll('#title, #description, #amount_needed, #deadline').forEach(input => {
+    input.addEventListener('input', saveDraft);
+});
+
+// Load draft on page load
+window.addEventListener('load', function() {
+    const saved = localStorage.getItem('urgentRequirementDraft');
+    if (saved) {
+        const draft = JSON.parse(saved);
+        // Only load if draft is less than 1 day old
+        if (new Date().getTime() - draft.timestamp < 86400000) {
+            if (confirm('Found a saved draft. Would you like to restore it?')) {
+                document.getElementById('title').value = draft.title || '';
+                document.getElementById('description').value = draft.description || '';
+                document.getElementById('amount_needed').value = draft.amount_needed || '';
+                document.getElementById('deadline').value = draft.deadline || '';
+                
+                // Trigger preview update
+                showPreview();
+            }
+        }
+    }
+});
+
+// Clear draft on successful submission
+document.getElementById('urgentForm').addEventListener('submit', function() {
+    localStorage.removeItem('urgentRequirementDraft');
+});
+</script>
+{% endblock %}

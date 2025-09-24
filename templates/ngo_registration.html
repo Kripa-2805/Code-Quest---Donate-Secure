@@ -1,0 +1,710 @@
+{% extends "base.html" %}
+
+{% block title %}NGO Registration{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="
+    background: linear-gradient(135deg, #232c51 0%, #39355c 100%);
+    border: 2px solid rgba(255,255,255,0.15); 
+    box-shadow: 0 15px 40px rgba(44,82,160,0.55);
+    border-radius: 24px;
+    margin: 2rem auto 2.5rem auto;
+    max-width: 700px;
+    text-align: center;
+    padding: 2.3rem 1.2rem 2rem 1.2rem;
+    position: relative;
+    ">
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">🏢</div>
+    <h1 style="
+        color: #fff;
+        font-size: 2.5rem;
+        font-weight: 900;
+        text-shadow: 0 3px 12px #5172d1;
+        margin-bottom: 1rem;
+        letter-spacing: 1.4px;
+    ">NGO Registration</h1>
+    <p style="
+        color: #e0e0ef;
+        font-size: 1.15rem;
+        text-shadow: 0 2px 8px #1a1a3a;
+        font-weight: 400;
+        letter-spacing: 0.8px;
+        line-height: 1.4;
+    ">Complete your organization profile to start receiving transparent donations</p>
+    
+    <!-- Progress Bar -->
+    <div style="
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        margin: 2rem auto 0 auto;
+        max-width: 400px;
+        overflow: hidden;
+    ">
+        <div id="progressBar" style="
+            height: 100%;
+            background: linear-gradient(45deg, #1e8449, #27ae60);
+            width: 33.33%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.4);
+        "></div>
+    </div>
+    <div style="
+        color: rgba(255,255,255,0.8);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    ">Step <span id="currentStep">1</span> of 3</div>
+</section>
+
+<!-- Registration Form -->
+<section style="margin: 2rem auto; max-width: 800px;">
+    <form action="{{ url_for('process_ngo_registration') }}" method="POST" enctype="multipart/form-data" id="ngoForm">
+        
+        <!-- Section 1: Basic Information -->
+        <div class="card form-section active" id="section1" style="padding: 2.5rem;">
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <div style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">📋</div>
+                <h2 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 0.5rem;">Basic Information</h2>
+                <p style="color: #666; font-size: 1rem;">Tell us about your organization</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="org_name" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-building" style="color: #667eea;"></i>
+                        Organization Name <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="text" id="org_name" name="org_name" placeholder="Enter your NGO's full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-map-marker-alt" style="color: #667eea;"></i>
+                        Location <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="text" id="location" name="location" placeholder="City, State" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_number" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-phone" style="color: #667eea;"></i>
+                        Contact Number <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="tel" id="contact_number" name="contact_number" placeholder="+91-XXXXX-XXXXX" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: #667eea;"></i>
+                        Official Email <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="contact@yourngo.org" required>
+                </div>
+                
+                <div class="form-group" style="grid-column: 1/-1;">
+                    <label for="website" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-globe" style="color: #667eea;"></i>
+                        Website (Optional)
+                    </label>
+                    <input type="url" id="website" name="website" placeholder="https://www.yourngo.org">
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
+                <button type="button" class="btn" onclick="nextSection()" style="
+                    padding: 12px 30px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                ">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 2: Payment Information -->
+        <div class="card form-section" id="section2" style="padding: 2.5rem; display: none;">
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <div style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">🏦</div>
+                <h2 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 0.5rem;">Payment Information</h2>
+                <p style="color: #666; font-size: 1rem;">Secure payment details for receiving donations</p>
+            </div>
+            
+            <!-- Security Info -->
+            <div style="
+                background: white;
+                border: 2px solid rgba(52, 152, 219, 0.3);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+            ">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color: #3498db;"></i>
+                <div>
+                    <h4 style="color: #3498db; margin-bottom: 0.5rem;">Security Assured</h4>
+                    <p style="color: #2c3e50; margin: 0; font-size: 0.95rem;">
+                        Your banking information is encrypted and secure. This information is used solely for processing donations to your organization.
+                    </p>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="bank_name" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-university" style="color: #667eea;"></i>
+                        Bank Name <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="text" id="bank_name" name="bank_name" placeholder="e.g., State Bank of India" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="account_number" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-credit-card" style="color: #667eea;"></i>
+                        Account Number <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="text" id="account_number" name="account_number" placeholder="Enter account number" required>
+                </div>
+            </div>
+            
+            <!-- UPI Section Centered -->
+            <div style="margin-top: 2rem; text-align: center;">
+                <div class="form-group" style="max-width: 400px; margin: 0 auto;">
+                    <label for="upi_id" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <i class="fas fa-mobile-alt" style="color: #667eea;"></i>
+                        UPI ID (Optional)
+                    </label>
+                    <input type="text" id="upi_id" name="upi_id" placeholder="yourngo@upi" style="text-align: center;">
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <div class="form-group" style="max-width: 300px; margin: 0 auto;">
+                        <label style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem;">
+                            <i class="fas fa-qrcode" style="color: #667eea;"></i>
+                            QR Code (Optional)
+                        </label>
+                        <div class="file-upload" onclick="document.getElementById('qr_code').click()" style="
+                            border: 2px dashed rgba(102, 126, 234, 0.3);
+                            border-radius: 10px;
+                            padding: 2rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            cursor: pointer;
+                            background: white;
+                        ">
+                            <i class="fas fa-qrcode" style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"></i>
+                            <p style="margin: 0.5rem 0; color: #2c3e50; font-weight: 500;">Upload QR Code for payments</p>
+                            <small style="color: #666;">PNG, JPG up to 5MB</small>
+                        </div>
+                        <input type="file" id="qr_code" name="qr_code" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem;">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()" style="
+                    padding: 12px 25px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                ">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button type="button" class="btn" onclick="nextSection()" style="
+                    padding: 12px 30px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                ">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Verification Documents -->
+        <div class="card form-section" id="section3" style="padding: 2.5rem; display: none;">
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <div style="font-size: 2.5rem; color: #667eea; margin-bottom: 1rem;">📋</div>
+                <h2 style="color: #2c3e50; font-size: 1.8rem; margin-bottom: 0.5rem;">Verification Documents</h2>
+                <p style="color: #666; font-size: 1rem;">Required for NGO verification and authenticity</p>
+            </div>
+            
+            <!-- Verification Info -->
+            <div style="
+                background: rgba(46, 204, 113, 0.1);
+                border: 2px solid rgba(46, 204, 113, 0.2);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            ">
+                <h4 style="color: #27ae60; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-info-circle"></i> NITI Aayog Verification Process
+                </h4>
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.95rem;">
+                    We automatically verify your NGO with NITI Aayog database using the provided Darpan ID.
+                </p>
+                <ul style="list-style: none; padding: 0; color: #666;">
+                    <li style="padding: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check" style="color: #27ae60;"></i>
+                        Automatic verification with NITI Aayog database
+                    </li>
+                    <li style="padding: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check" style="color: #27ae60;"></i>
+                        Cross-check organization details
+                    </li>
+                    <li style="padding: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check" style="color: #27ae60;"></i>
+                        Verify tax exemption status
+                    </li>
+                    <li style="padding: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check" style="color: #27ae60;"></i>
+                        Approval within 24-48 hours
+                    </li>
+                </ul>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <div class="form-group">
+                    <label for="niti_aayog_id" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-certificate" style="color: #667eea;"></i>
+                        NITI Aayog Darpan ID <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input type="text" id="niti_aayog_id" name="niti_aayog_id" placeholder="Enter your Darpan registration ID" required>
+                    <small style="color: #666; font-size: 0.85rem; margin-top: 0.3rem; display: block;">
+                        This will be verified automatically with NITI Aayog database
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-alt" style="color: #667eea;"></i>
+                        Tax Exemption Certificate <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <div class="file-upload" onclick="document.getElementById('tax_certificate').click()" style="
+                        border: 2px dashed rgba(102, 126, 234, 0.3);
+                        border-radius: 10px;
+                        padding: 2rem;
+                        text-align: center;
+                        transition: all 0.3s ease;
+                        cursor: pointer;
+                        background: rgba(255, 255, 255, 0.5);
+                    ">
+                        <i class="fas fa-file-alt" style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"></i>
+                        <p style="margin: 0.5rem 0; color: #2c3e50; font-weight: 500;">Upload 12A/80G Certificate</p>
+                        <small style="color: #666;">PDF, PNG, JPG up to 10MB</small>
+                    </div>
+                    <input type="file" id="tax_certificate" name="tax_certificate" accept=".pdf,image/*" required style="display: none;">
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem;">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()" style="
+                    padding: 12px 25px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                ">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button type="submit" class="btn" id="submitBtn" style="
+                    padding: 12px 30px;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: linear-gradient(45deg, #1e8449, #27ae60);
+                ">
+                    <i class="fas fa-check"></i> Complete Registration
+                </button>
+            </div>
+        </div>
+    </form>
+</section>
+
+<!-- Success Message Section -->
+<section style="margin: 3rem auto; max-width: 600px;">
+    <div class="card" style="
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        text-align: center;
+    ">
+        <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">
+            What Happens Next?
+        </h2>
+        
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        ">
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚡</div>
+                <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Instant Processing</h4>
+                <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">
+                    Your application is processed immediately
+                </p>
+            </div>
+            
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+                <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Auto Verification</h4>
+                <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">
+                    NITI Aayog verification within hours
+                </p>
+            </div>
+            
+            <div style="text-align: center;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💰</div>
+                <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">Start Receiving</h4>
+                <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">
+                    Begin receiving transparent donations
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.form-section {
+    transition: all 0.5s ease;
+}
+
+.form-section.active {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.file-upload:hover {
+    border-color: #667eea !important;
+    background: rgba(102, 126, 234, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+.file-upload.uploaded {
+    border-color: #1e8449 !important;
+    background: rgba(46, 204, 113, 0.1) !important;
+}
+
+.form-group input:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.form-group input.valid {
+    border-color: #1e8449 !important;
+}
+
+.form-group input.invalid {
+    border-color: #e74c3c !important;
+}
+</style>
+
+<script>
+let currentSection = 1;
+const totalSections = 3;
+
+function updateProgress() {
+    const progressBar = document.getElementById('progressBar');
+    const currentStepEl = document.getElementById('currentStep');
+    const progress = (currentSection / totalSections) * 100;
+    
+    progressBar.style.width = progress + '%';
+    currentStepEl.textContent = currentSection;
+}
+
+function showSection(sectionNum) {
+    // Hide all sections
+    document.querySelectorAll('.form-section').forEach(section => {
+        section.style.display = 'none';
+        section.classList.remove('active');
+    });
+    
+    // Show current section
+    const currentSectionEl = document.getElementById('section' + sectionNum);
+    currentSectionEl.style.display = 'block';
+    
+    // Add active class after a short delay for animation
+    setTimeout(() => {
+        currentSectionEl.classList.add('active');
+    }, 50);
+    
+    // Update progress
+    updateProgress();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextSection() {
+    if (validateCurrentSection()) {
+        if (currentSection < totalSections) {
+            currentSection++;
+            showSection(currentSection);
+        }
+    }
+}
+
+function prevSection() {
+    if (currentSection > 1) {
+        currentSection--;
+        showSection(currentSection);
+    }
+}
+
+function validateCurrentSection() {
+    const currentSectionElement = document.getElementById('section' + currentSection);
+    const requiredFields = currentSectionElement.querySelectorAll('input[required], select[required]');
+    
+    let isValid = true;
+    
+    for (let field of requiredFields) {
+        if (!field.value.trim()) {
+            field.classList.add('invalid');
+            field.classList.remove('valid');
+            if (isValid) {
+                field.focus();
+                field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            isValid = false;
+        } else {
+            field.classList.remove('invalid');
+            field.classList.add('valid');
+        }
+    }
+    
+    if (!isValid) {
+        // Create or update error message
+        let errorMsg = currentSectionElement.querySelector('.error-message');
+        if (!errorMsg) {
+            errorMsg = document.createElement('div');
+            errorMsg.className = 'error-message';
+            errorMsg.style.cssText = `
+                background: rgba(231, 76, 60, 0.1);
+                border: 2px solid rgba(231, 76, 60, 0.3);
+                color: #e74c3c;
+                padding: 1rem;
+                border-radius: 10px;
+                margin-top: 1rem;
+                text-align: center;
+                animation: shake 0.5s ease-in-out;
+            `;
+            currentSectionElement.appendChild(errorMsg);
+        }
+        errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please fill in all required fields.';
+        return false;
+    }
+    
+    // Remove error message if exists
+    const errorMsg = currentSectionElement.querySelector('.error-message');
+    if (errorMsg) {
+        errorMsg.remove();
+    }
+    
+    // Additional validation for specific sections
+    if (currentSection === 1) {
+        const email = document.getElementById('email').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showFieldError(document.getElementById('email'), 'Please enter a valid email address.');
+            return false;
+        }
+        
+        const phone = document.getElementById('contact_number').value;
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        if (!phoneRegex.test(phone.replace(/[-\s]/g, ''))) {
+            showFieldError(document.getElementById('contact_number'), 'Please enter a valid phone number.');
+            return false;
+        }
+    }
+    
+    if (currentSection === 3) {
+        const nitiId = document.getElementById('niti_aayog_id').value;
+        if (nitiId.length < 10) {
+            showFieldError(document.getElementById('niti_aayog_id'), 'Please enter a valid NITI Aayog Darpan ID.');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+function showFieldError(field, message) {
+    field.focus();
+    field.classList.add('invalid');
+    
+    // Remove existing error
+    const existingError = field.parentElement.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Add error message
+    const errorEl = document.createElement('div');
+    errorEl.className = 'field-error';
+    errorEl.style.cssText = `
+        color: #e74c3c;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    `;
+    errorEl.innerHTML = `<i class="fas fa-times"></i> ${message}`;
+    field.parentElement.appendChild(errorEl);
+}
+
+// File upload handling
+function setupFileUpload(inputId, uploadDiv) {
+    const input = document.getElementById(inputId);
+    const uploadArea = uploadDiv;
+    
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            uploadArea.innerHTML = `
+                <i class="fas fa-check-circle" style="font-size: 2rem; color: #1e8449; margin-bottom: 0.5rem;"></i>
+                <p style="color: #1e8449; margin: 0.5rem 0; font-weight: 600;">${file.name}</p>
+                <small style="color: #1e8449; font-weight: 500;">File uploaded successfully</small>
+            `;
+            uploadArea.classList.add('uploaded');
+        }
+    });
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#667eea';
+        this.style.background = 'rgba(102, 126, 234, 0.1)';
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'rgba(102, 126, 234, 0.3)';
+        this.style.background = 'rgba(255, 255, 255, 0.5)';
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'rgba(102, 126, 234, 0.3)';
+        this.style.background = 'rgba(255, 255, 255, 0.5)';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            input.files = files;
+            input.dispatchEvent(new Event('change'));
+        }
+    });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup file uploads
+    const qrUploadDiv = document.querySelector('#section2 .file-upload');
+    const taxUploadDiv = document.querySelector('#section3 .file-upload');
+    
+    setupFileUpload('qr_code', qrUploadDiv);
+    setupFileUpload('tax_certificate', taxUploadDiv);
+    
+    // Initialize progress bar
+    updateProgress();
+    
+    // Real-time validation
+    document.querySelectorAll('input[required]').forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.classList.contains('invalid')) {
+                this.classList.remove('invalid');
+                const errorEl = this.parentElement.querySelector('.field-error');
+                if (errorEl) {
+                    errorEl.remove();
+                }
+            }
+            
+            if (this.value.trim()) {
+                this.classList.add('valid');
+            } else {
+                this.classList.remove('valid');
+            }
+        });
+    });
+    
+    // Form submission
+    document.getElementById('ngoForm').addEventListener('submit', function(e) {
+        if (!validateCurrentSection()) {
+            e.preventDefault();
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+    });
+    
+    // NITI Aayog ID validation
+    document.getElementById('niti_aayog_id').addEventListener('input', function() {
+        const value = this.value;
+        
+        // Remove existing feedback
+        const existingFeedback = this.parentElement.querySelector('.validation-feedback');
+        if (existingFeedback) {
+            existingFeedback.remove();
+        }
+        
+        const feedback = document.createElement('div');
+        feedback.className = 'validation-feedback';
+        feedback.style.cssText = `
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        `;
+        
+        if (value.length >= 10 && value.match(/^[A-Z]{2}\/\d{4}\/\d{7}$/)) {
+            feedback.innerHTML = '<i class="fas fa-check" style="color: #1e8449;"></i> <span style="color: #1e8449;">Valid format</span>';
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+        } else if (value.length > 0) {
+            feedback.innerHTML = '<i class="fas fa-info" style="color: #f39c12;"></i> <span style="color: #f39c12;">Format: XX/YYYY/NNNNNNN (e.g., MH/2020/0123456)</span>';
+            this.classList.remove('valid', 'invalid');
+        }
+        
+        if (feedback.innerHTML) {
+            this.parentElement.appendChild(feedback);
+        }
+    });
+});
+
+// Add shake animation for errors
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}
