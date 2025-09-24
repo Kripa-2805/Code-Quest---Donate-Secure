@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
 {% block title %}Register - {{ role.title() }}{% endblock %}
-
 {% block content %}
 <!-- Hero Section -->
 <section style="
@@ -51,11 +49,10 @@
         ">Get verified and start receiving transparent donations</p>
     {% endif %}
 </section>
-
 <!-- Registration Form -->
 <section style="margin: 2rem auto; max-width: 500px;">
     <div class="card" style="padding: 2.5rem;">
-        <form action="{{ url_for('process_register') }}" method="POST" id="registerForm">
+        <form action="{{ url_for('process_register') }}" method="POST" id="registerForm" novalidate>
             <input type="hidden" name="user_type" value="{{ role }}">
             
             <div class="form-group">
@@ -67,7 +64,6 @@
                        style="padding-left: 15px;">
                 <div id="email-feedback" style="font-size: 0.85rem; margin-top: 0.3rem;"></div>
             </div>
-
             <div class="form-group">
                 <label for="password" style="display: flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-lock" style="color: #667eea;"></i>
@@ -92,7 +88,7 @@
                         border-radius: 2px;
                     "></div>
                 </div>
-                <ul id="passwordRequirements" style="
+                <ul id="passwordRequirements" class="requirements-list" style="
                     font-size: 0.8rem;
                     color: #333;
                     margin-top: 0.8rem;
@@ -121,7 +117,6 @@
                     </li>
                 </ul>
             </div>
-
             <div class="form-group">
                 <label for="confirmPassword" style="display: flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-lock" style="color: #667eea;"></i>
@@ -130,7 +125,6 @@
                 <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm your password" required>
                 <div id="confirm-feedback" style="font-size: 0.85rem; margin-top: 0.3rem;"></div>
             </div>
-
             <button type="submit" class="btn" id="submitBtn" style="
                 width: 100%;
                 padding: 15px;
@@ -148,7 +142,6 @@
                 {% endif %}
             </button>
         </form>
-
         <div style="
             text-align: center;
             margin-top: 2rem;
@@ -165,7 +158,6 @@
         </div>
     </div>
 </section>
-
 {% if role == 'receiver' %}
 <!-- Next Steps Section -->
 <section style="margin: 3rem auto; max-width: 800px;">
@@ -226,7 +218,6 @@
         </div>
     </div>
 </section>
-
 <!-- Benefits Section -->
 <section style="margin: 3rem auto; max-width: 600px;">
     <div class="card" style="
@@ -265,33 +256,27 @@
     </div>
 </section>
 {% endif %}
-
 <style>
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
 }
-
 .form-group input:focus {
     border-color: #667eea !important;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
     transform: translateY(-1px) !important;
 }
-
 .requirements-list li.valid {
     color: #0d7338 !important;
 }
-
 .requirements-list li.valid i {
     color: #0d7338 !important;
 }
-
 .strength-fill.weak { background: #e74c3c; width: 25%; }
 .strength-fill.fair { background: #f39c12; width: 50%; }
 .strength-fill.good { background: #3498db; width: 75%; }
 .strength-fill.strong { background: #0d7338; width: 100%; }
 </style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Password visibility toggle
@@ -309,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.classList.add('fa-eye');
         }
     });
-
     // Password strength checker
     document.getElementById('password').addEventListener('input', function() {
         const password = this.value;
@@ -319,9 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
             uppercase: /[A-Z]/.test(password),
             lowercase: /[a-z]/.test(password),
             number: /\d/.test(password),
-            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\|,.<>\/?]/.test(password)
         };
-
         // Update requirement indicators
         Object.keys(requirements).forEach(req => {
             const element = document.getElementById(req);
@@ -340,7 +323,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.style.color = '#e74c3c';
             }
         });
-
         // Calculate strength
         const validCount = Object.values(requirements).filter(Boolean).length;
         strengthFill.className = 'strength-fill';
@@ -357,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
             strengthFill.classList.add('strong');
         }
     });
-
     // Confirm password checker
     document.getElementById('confirmPassword').addEventListener('input', function() {
         const password = document.getElementById('password').value;
@@ -375,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-times"></i> Passwords do not match</span>';
         }
     });
-
     // Email validation
     document.getElementById('email').addEventListener('input', function() {
         const email = this.value;
@@ -393,7 +373,6 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.innerHTML = '<span style="color: #e74c3c;"><i class="fas fa-times"></i> Invalid email format</span>';
         }
     });
-
     // Form submission validation
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         const password = document.getElementById('password').value;
@@ -414,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
             uppercase: /[A-Z]/.test(password),
             lowercase: /[a-z]/.test(password),
             number: /\d/.test(password),
-            special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            special: /[!@#$%^&*()_+\-=\[\]{};':"\|,.<>\/?]/.test(password)
         };
         
         const validCount = Object.values(requirements).filter(Boolean).length;
