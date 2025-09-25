@@ -533,25 +533,46 @@ def stories():
                  JOIN ngos n ON s.ngo_id = n.id
                  WHERE s.is_approved = TRUE
                  ORDER BY s.created_at DESC''')
-    all_stories = c.fetchall()
+    rows = c.fetchall()
     conn.close()
-    return render_template('stories.html', stories=all_stories)
+    stories = [
+        {
+            'title': row[0],
+            'content': row[1],
+            'org_name': row[2],
+            'created_at': row[3]
+        }
+        for row in rows
+    ]
+    return render_template('stories.html', stories=stories)
+
 
 @app.route('/urgent_requirements')
 def urgent_requirements():
-
     conn = sqlite3.connect('donation_platform.db')
     c = conn.cursor()
-    
     c.execute('''SELECT ur.id, ur.title, ur.description, ur.amount_needed, ur.amount_raised, 
-                ur.deadline, n.org_name, n.id as ngo_id
-                FROM urgent_requirements ur 
-                JOIN ngos n ON ur.ngo_id = n.id 
-                WHERE ur.is_active = TRUE 
-                ORDER BY ur.deadline ASC''')
-    requirements = c.fetchall()
-    
+                 ur.deadline, n.org_name, n.id as ngo_id
+                 FROM urgent_requirements ur 
+                 JOIN ngos n ON ur.ngo_id = n.id 
+                 WHERE ur.is_active = TRUE 
+                 ORDER BY ur.deadline ASC''')
+    rows = c.fetchall()
     conn.close()
+    # List of dicts for Jinja attribute access
+    requirements = [
+        {
+            'id': row[0],
+            'title': row[1],
+            'description': row[2],
+            'amount_needed': row[3],
+            'amount_raised': row[4],
+            'deadline': row[5],
+            'org_name': row[6],
+            'ngo_id': row[7]
+        }
+        for row in rows
+    ]
     return render_template('urgent_requirements.html', requirements=requirements)
 
 # Error handlers
@@ -583,3 +604,4 @@ if __name__ == '__main__':
     
     # Run the app
     app.run(debug=True, host='0.0.0.0', port=5000)
+
