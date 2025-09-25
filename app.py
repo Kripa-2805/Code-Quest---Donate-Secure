@@ -523,23 +523,23 @@ def about():
 def contact():
     return render_template('contact.html')
 
+
 @app.route('/stories')
 def stories():
-    conn = sqlite3.connect('donation_platform.db')
+    conn = sqlite3.connect("donation_platform.db")
     c = conn.cursor()
-    
-    c.execute('''SELECT s.title, s.content, n.org_name, s.created_at 
-                FROM stories s 
-                JOIN ngos n ON s.ngo_id = n.id 
-                WHERE s.is_approved = TRUE 
-                ORDER BY s.created_at DESC''')
+    c.execute('''SELECT s.title, s.content, n.org_name, s.created_at
+                 FROM stories s
+                 JOIN ngos n ON s.ngo_id = n.id
+                 WHERE s.is_approved = TRUE
+                 ORDER BY s.created_at DESC''')
     all_stories = c.fetchall()
-    
     conn.close()
     return render_template('stories.html', stories=all_stories)
 
 @app.route('/urgent_requirements')
 def urgent_requirements():
+
     conn = sqlite3.connect('donation_platform.db')
     c = conn.cursor()
     
@@ -583,4 +583,3 @@ if __name__ == '__main__':
     
     # Run the app
     app.run(debug=True, host='0.0.0.0', port=5000)
-
