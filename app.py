@@ -533,18 +533,10 @@ def stories():
                  JOIN ngos n ON s.ngo_id = n.id
                  WHERE s.is_approved = TRUE
                  ORDER BY s.created_at DESC''')
-    rows = c.fetchall()
+    stories = c.fetchall()  # list of tuples
     conn.close()
-    stories = [
-        {
-            'title': row[0],
-            'content': row[1],
-            'org_name': row[2],
-            'created_at': row[3]
-        }
-        for row in rows
-    ]
     return render_template('stories.html', stories=stories)
+
 
 
 @app.route('/urgent_requirements')
@@ -604,4 +596,5 @@ if __name__ == '__main__':
     
     # Run the app
     app.run(debug=True, host='0.0.0.0', port=5000)
+
 
